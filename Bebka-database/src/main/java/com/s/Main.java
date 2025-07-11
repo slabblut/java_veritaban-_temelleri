@@ -20,6 +20,44 @@ public class Main {
             Statement statement=connection.createStatement();
             statement.execute(sql);
             System.out.println("Tablo oluşturuldu");
+
+
+          //preparestatement
+          String insertSql  = "INSERT INTO users(name,email) VALUES(?,?)";
+          PreparedStatement preparedStatement = connection.prepareStatement(insertSql);
+          preparedStatement.setString(1,"sila");
+          preparedStatement.setString(2, "silab@test");
+          preparedStatement.executeUpdate();
+
+          //resultset
+            String selectSql="SELECT * FROM users WHERE email=?";
+            PreparedStatement prepared = connection.prepareStatement(selectSql);
+            prepared.setString(1,"silab@test");
+            ResultSet resultSet=prepared.executeQuery();
+            while (resultSet.next()){
+                System.out.println(resultSet.getRowId("id"));
+                System.out.println(resultSet.getString("name"));
+                System.out.println(resultSet.getString("email"));
+            }
+
+            //Update işlemi
+            String updateSql = "UPDATE users SET name =? WHERE email=?";
+            PreparedStatement updateStament = connection.prepareStatement(updateSql);
+            updateStament.setString(1,"Sıla Updated");
+            updateStament.setString(2,"silab@test");
+            int updatedRows = updateStament.executeUpdate();
+
+            //Delete
+            String deleteSql = "DELETE FROM users WHERE email = ?";
+            PreparedStatement deleteStatment= connection.prepareStatement(deleteSql);
+            deleteStatment.setString(1,"silab@test");
+            int deletedRows = deleteStatment.executeUpdate();
+
+            preparedStatement.close();
+            resultSet.close();
+            deleteStatment.close();
+            statement.close();
+            connection.close();
         }catch (Exception e){
             e.printStackTrace();
         }
